@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipfs.kdc.mapper.InvestmentMapper">
+
+	<select id="selectInvestmentList" resultType="com.ipfs.kdc.vo.InvestmentVO">
+		select 
+			investment_id,
+			user_email,
+			user_name,
+			product_name,
+			purchase_date,
+			purchase_size
+		 from Investment_Info	
+	</select>
+	<select id="getInvestmentListByCategory" parameterType="string" resultType="com.ipfs.kdc.vo.InvestmentVO">
+		select 
+			investment_id,
+			user_email,
+			user_name,
+			product_name,
+			purchase_date,
+			purchase_size
+		 from Investment_Info
+		 WHERE product_name IN
+        <foreach collection="names" item="name" open="(" separator="," close=")">
+            #{name}
+        </foreach> 	
+	</select>
+		<select id="selectInvestmentCategoryByIndex" parameterType="string" resultType="com.ipfs.kdc.vo.InvestmentCategoryVO">
+		select 
+			investment_index,
+			investment_category_name,
+			investment_names
+		 from Investment_Category
+		 where investment_index = #{category}	
+	</select>
+	<select id="selectInvestmentCategoryList" resultType="com.ipfs.kdc.vo.InvestmentCategoryVO">
+		select 
+			investment_index,
+			investment_category_name,
+			investment_names
+		 from Investment_Category	
+	</select>
+	<select id="findByUserId" parameterType="string" resultType="com.ipfs.kdc.vo.LoginVO">
+		select 
+			id,password
+		 from Admin_Info
+		 where id=#{id}
+	</select>
+	<select id="selectIDList" resultType="string">
+		select 
+			investment_id
+		 from Investment_Info	
+	</select>
+</mapper>
