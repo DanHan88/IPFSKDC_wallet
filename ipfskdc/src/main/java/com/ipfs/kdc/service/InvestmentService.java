@@ -12,6 +12,10 @@ import com.ipfs.kdc.vo.InvestmentCategoryVO;
 import com.ipfs.kdc.vo.InvestmentVO;
 import com.ipfs.kdc.vo.LoginVO;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +43,15 @@ public class InvestmentService {
 
     public LoginVO findByUserId(String id) {
         return this.investmentMapper.findByUserId(id);
+    }
+
+    public boolean checkSession(HttpServletRequest request) {
+    	HttpSession session = request.getSession();
+    	LoginVO loginVO = (LoginVO)session.getAttribute("user");
+        if (session.getAttribute("user") == null || loginVO.getId() == "") {
+	        return false;
+	    }
+	    return true;
     }
 }
 

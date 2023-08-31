@@ -21,6 +21,10 @@ import com.ipfs.kdc.service.InvestmentService;
 import com.ipfs.kdc.vo.InvestmentCategoryVO;
 import com.ipfs.kdc.vo.InvestmentVO;
 import com.ipfs.kdc.vo.LoginVO;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +36,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,19 +48,21 @@ public class InvestmentController {
     private PasswordEncoder pwEncoder;
 
     @GetMapping(value={"/main"})
-    public ModelAndView main(HttpServletRequest request, String category) {
+    public ModelAndView main(HttpServletRequest request, String category,String sb) {
         ModelAndView mav = new ModelAndView();
-        HttpSession session = request.getSession();
-        LoginVO loginVO = (LoginVO)session.getAttribute("user");
-        if (session.getAttribute("user") == null || loginVO.getId() == "") {
-            mav.setViewName("redirect:/");
+        
+        if(!investmentService.checkSession(request)) {
+        	mav.setViewName("redirect:/");
             return mav;
         }
+        HttpSession session = request.getSession();
+        LoginVO loginVO = (LoginVO)session.getAttribute("user");
         List<InvestmentCategoryVO> listInvestmentCategory = this.investmentService.getInvestmentCategoryList();
         List<InvestmentVO> listInvestment = category == null || category.equals("0") ? this.investmentService.getInvestmentList() : this.investmentService.getInvestmentListByCategory(category);
+        mav.addObject("sb", sb);
         mav.addObject("listInvestment", listInvestment);
         mav.addObject("listInvestmentCategory", listInvestmentCategory);
-        mav.addObject("loginVO", (Object)loginVO);
+        mav.addObject("loginVO", loginVO);
         mav.setViewName("views/default_layout");
         return mav;
     }
@@ -75,7 +82,7 @@ public class InvestmentController {
     }
 
     @PostMapping(value={"/login.do"})
-    private String doLogin(LoginVO loginVO, BindingResult result, RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr) throws Exception {
+    private String doLogin(LoginVO loginVO, BindingResult result, RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginVO lvo = this.investmentService.findByUserId(loginVO.getId());
         HttpSession session = request.getSession();
         String rawPw = "";
@@ -87,11 +94,53 @@ public class InvestmentController {
                 session.setAttribute("user", (Object)lvo);
                 return "redirect:/main";
             }
-            rttr.addFlashAttribute("result", (Object)0);
+            redirect.addFlashAttribute("result", (Object)0);
             return "redirect:/";
         }
-        rttr.addFlashAttribute("result", (Object)0);
+        redirect.addFlashAttribute("result", (Object)0);
         return "redirect:/";
     }
+    @PostMapping(value={"/payout"})
+    private ModelAndView payout(RedirectAttributes redirect, HttpServletRequest request, HttpServletResponse response,@RequestParam("investment_id") List<String> investment_ids ) throws Exception {
+    	ModelAndView mav = new ModelAndView();
+    	if(!investmentService.checkSession(request)) {
+    		mav.setViewName("redirect:/");
+            return mav;
+        }
+        
+    	String cmd = "ll >> ~/testlog.log";
+        String[] command = {"/bin/sh","-c",cmd};
+        StringBuffer sb = new StringBuffer();
+
+        try 
+        {
+        	ProcessBuilder processBuilder = new ProcessBuilder(command);
+        	
+        	Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n"); // Add newline character to separate lines
+            }
+
+            int exitCode = process.waitFor(); // Wait for the process to finish
+            if (exitCode != 0) {
+                sb.append("Command failed with exit code: ").append(exitCode);
+            }
+         } 
+        catch (Exception e) 
+        {     
+        	sb.append("ERROR!!!: ").append(e.getMessage());
+        }
+    	
+        mav.addObject("sb", sb);
+        mav.setViewName("redirect:/main");
+        return mav;
+        
+        
+        
+    }  
+    
 }
 
