@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipfs.kdc.mapper.NanoDCMapper">
+
+
+<select id="selectSectorById" parameterType ="com.ipfs.kdc.vo.SectorInfoVO" resultType="com.ipfs.kdc.vo.SectorInfoVO">
+		select 
+			sector_id,
+			miner_id,
+			deals,
+			pledged,
+			state,
+			to_upgrade,
+			weight_type,
+			event_type,
+			deadline_id,
+			partition_id,
+			is_faulty,
+			is_live,
+			is_recovering
+			where sector_id=#{sector_id} AND miner_id=#{miner_id}
+		 from NanoDCSectors	
+	</select>
+	
+	<insert id="addNewSector" parameterType ="com.ipfs.kdc.vo.SectorInfoVO">
+		INSERT INTO NanoDCSectors 
+			(sector_id, 
+			miner_id, 
+			deals, 
+			pledged, 
+			state, 
+			to_upgrade, 
+			weight_type, 
+			event_type, 
+			deadline_id, 
+			partition_id, 
+			is_faulty, 
+			is_live, 
+			is_recovering)
+		VALUES 
+			(#{sector_id}, 
+			#{miner_id}, 
+			#{deals}, 
+			#{pledged}, 
+			#{state}, 
+			#{to_upgrade}, 
+			#{weight_type}, 
+			#{event_type}, 
+			#{deadline_id}, 
+			#{partition_id}, 
+			#{is_faulty}, 
+			#{is_live}, 
+			#{is_recovering});
+	</insert>
+	<update id="updateNewSector" parameterType ="com.ipfs.kdc.vo.SectorInfoVO">
+		SET 
+		    deals = COALESCE(#{deals}, deals),
+		    pledged = COALESCE(#{pledged}, pledged),
+		    state = COALESCE(#{state}, state),
+		    to_upgrade = COALESCE(#{to_upgrade}, to_upgrade),
+		    weight_type = COALESCE(#{weight_type}, weight_type),
+		    event_type = COALESCE(#{event_type}, event_type),
+		    deadline_id = COALESCE(#{deadline_id}, deadline_id),
+		    partition_id = COALESCE(#{partition_id}, partition_id),
+		    is_faulty = COALESCE(#{is_faulty}, is_faulty),
+		    is_live = COALESCE(#{is_live}, is_live),
+		    is_recovering = COALESCE(#{is_recovering}, is_recovering)
+		WHERE sector_id = #{sector_id} AND miner_id = #{miner_id};
+	</update>
+	<select id="checkSectorExists" parameterType="com.ipfs.kdc.vo.SectorInfoVO" resultType="boolean">
+	    SELECT EXISTS (
+	        SELECT 1
+	        FROM NanoDCSectors
+	        WHERE sector_id = #{sector_id} AND miner_id = #{miner_id}
+	        LIMIT 1
+	    ) AS result
+	</select>
+	
+
+
+
+</mapper>
