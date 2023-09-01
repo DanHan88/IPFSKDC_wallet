@@ -98,19 +98,37 @@ public class NanoDCService {
         double totalQA = 0;
         double superTotal =0;
         double rawByte =0;
+        int cc =0;
+        int verified =0;
+        int nonVerified =0;
+        
+        
+        
         for (Map.Entry<String, SectorInfoVO> entry : sectorVOHashMap.entrySet()) {
             String id = entry.getKey();
             SectorInfoVO sectorInfo = entry.getValue();
             if(sectorInfo.getIs_live()!=null && sectorInfo.getIs_faulty() !=null && sectorInfo.getIs_active() !=null&&sectorInfo.getIs_live().equals("True") &&sectorInfo.getIs_faulty().equals("False")&&sectorInfo.getIs_active().equals("True")) {
             	totalQA +=sectorInfo.getQualityPower();
             	rawByte += sectorSize;	
+            	
+            	if(sectorInfo.getDeals().equals("0")) {
+                	cc++;
+                }else if(sectorInfo.getPledged().equals("0")) {
+                	nonVerified++;
+                }else {
+                	verified++;
+                }
             }
+            
             superTotal +=sectorInfo.getQualityPower();
         }
         
         NodeInfoVO nodeInfoVO = new NodeInfoVO();
         nodeInfoVO.setQaPower(convertBytes(totalQA));
         nodeInfoVO.setRawPower(convertBytes(rawByte));
+        nodeInfoVO.setCc(cc);
+        nodeInfoVO.setVerified(verified);
+        nodeInfoVO.setNonVerified(nonVerified);
         
         return nodeInfoVO;
     }

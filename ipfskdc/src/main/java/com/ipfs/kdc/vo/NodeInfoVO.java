@@ -7,7 +7,30 @@ public class NodeInfoVO {
 
 	String qaPower;
 	String rawPower;
+	  int cc;
+     int verified;
+     int nonVerified;
 	
+     
+     
+	public int getCc() {
+		return cc;
+	}
+	public void setCc(int cc) {
+		this.cc = cc;
+	}
+	public int getVerified() {
+		return verified;
+	}
+	public void setVerified(int verified) {
+		this.verified = verified;
+	}
+	public int getNonVerified() {
+		return nonVerified;
+	}
+	public void setNonVerified(int nonVerified) {
+		this.nonVerified = nonVerified;
+	}
 	public String getQaPower() {
 		return qaPower;
 	}
