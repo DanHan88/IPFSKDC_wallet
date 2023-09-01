@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ipfs.kdc.service.NanoDCService;
+import com.ipfs.kdc.vo.NodeInfoVO;
 
 @Controller
 public class NanoDCController {
@@ -26,8 +27,8 @@ public class NanoDCController {
         ModelAndView mav = new ModelAndView();
         
         List<String> prometeusData = nanoDCService.getPrometheusData("http://175.207.91.25:9101/metrics");
-        double qaPower = nanoDCService.processPrometheusData(prometeusData);
-        mav.addObject("qaPower", qaPower +"byte");
+        NodeInfoVO nodeInfoVO = nanoDCService.processPrometheusData(prometeusData);
+        mav.addObject("nodeInfoVO", nodeInfoVO);
         if(monitorID.equals("f001")) {
         	mav.setViewName("views/cards");
         }else if(monitorID.equals("f002")) {

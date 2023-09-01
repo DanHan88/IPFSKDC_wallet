@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ipfs.kdc.mapper.NanoDCMapper;
+import com.ipfs.kdc.vo.NodeInfoVO;
 import com.ipfs.kdc.vo.SectorInfoVO;
 
 @Service
@@ -38,7 +39,9 @@ public class NanoDCService {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-            	fullData.add(inputLine);
+            	if(inputLine.indexOf("#")==-1) {
+            		fullData.add(inputLine);
+            	}
             }
             in.close();
             return fullData;
@@ -48,13 +51,13 @@ public class NanoDCService {
         }
     }
     
-    public double processPrometheusData(List<String> data) {
-
-    	double totalPower = 0;
+    public NodeInfoVO processPrometheusData(List<String> data) {
+    		double sectorSize =0;
     	//Date now = new Date(System.currentTimeMillis());
-    	List <SectorInfoVO> sectorVOList = new ArrayList<SectorInfoVO>();
+    	 Map<String, SectorInfoVO> sectorVOHashMap = new HashMap<>();
         for(int i=0;i<data.size();i++) {
-        	System.out.println("Processing line :" + i +"/"+ data.size());
+        	double qualityPower = 0;
+        	
         	String line = data.get(i);
         	SectorInfoVO sectorInfoVO = new SectorInfoVO();
         	Boolean isSectorInfo = false;
@@ -62,7 +65,7 @@ public class NanoDCService {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			totalPower += Double.parseDouble(piece);
+        			qualityPower = Double.parseDouble(piece);
         			isSectorInfo = true;
         		}
         	}else if(line.indexOf("lotus_miner_sector_state")>-1) {
@@ -70,20 +73,46 @@ public class NanoDCService {
         	}else if(line.indexOf("lotus_miner_deadline_active_partition_sector")>-1) {
         		isSectorInfo = true;
         	}else if(line.indexOf("lotus_miner_sector_event")>-1) {
-        		isSectorInfo = false;
+        			//
+        	}else if(line.indexOf("lotus_miner_info_sector_size")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			sectorSize = Double.parseDouble(piece);
+        		}
         	}
         	if(isSectorInfo) {
         		sectorInfoVO = parseInputString(line);
-        		if(!sectorInfoVO.isEmpty()) {
-        			if(nanoDCMapper.checkSectorExists(sectorInfoVO)) {
-        				nanoDCMapper.updateNewSector(sectorInfoVO);
-        			}else {
-        				nanoDCMapper.addNewSector(sectorInfoVO);
-        			}	
+        		if(qualityPower>0) {
+        			sectorInfoVO.setQualityPower(qualityPower);
+        		}
+        		SectorInfoVO existingSectorInfoVO = sectorVOHashMap.get(sectorInfoVO.getSector_id());
+        		if(!sectorInfoVO.isEmpty()&&existingSectorInfoVO==null) {
+        			sectorVOHashMap.put(sectorInfoVO.getSector_id(),sectorInfoVO);		
+        		}else if(!sectorInfoVO.isEmpty()) {
+        			sectorVOHashMap.put(sectorInfoVO.getSector_id(), existingSectorInfoVO.merge(sectorInfoVO));
         		}
         	}
         }
-        return totalPower;
+        
+        double totalQA = 0;
+        double superTotal =0;
+        double rawByte =0;
+        for (Map.Entry<String, SectorInfoVO> entry : sectorVOHashMap.entrySet()) {
+            String id = entry.getKey();
+            SectorInfoVO sectorInfo = entry.getValue();
+            if(sectorInfo.getIs_live()!=null && sectorInfo.getIs_faulty() !=null && sectorInfo.getIs_active() !=null&&sectorInfo.getIs_live().equals("True") &&sectorInfo.getIs_faulty().equals("False")&&sectorInfo.getIs_active().equals("True")) {
+            	totalQA +=sectorInfo.getQualityPower();
+            	rawByte += sectorSize;	
+            }
+            superTotal +=sectorInfo.getQualityPower();
+        }
+        
+        NodeInfoVO nodeInfoVO = new NodeInfoVO();
+        nodeInfoVO.setQaPower(convertBytes(totalQA));
+        nodeInfoVO.setRawPower(convertBytes(rawByte));
+        
+        return nodeInfoVO;
     }
     
     public static SectorInfoVO parseInputString(String input) {
@@ -123,8 +152,35 @@ public class NanoDCService {
                 sectorInfo.setIs_live(fieldValue);
             } else if ("is_recovering".equals(fieldName)) {
                 sectorInfo.setIs_recovering(fieldValue);
+            } else if ("is_active".equals(fieldName)) {
+                sectorInfo.setIs_active(fieldValue);
             } 
         }
         return sectorInfo;
     }  
+    public String convertBytes(double bytes) {
+        if (bytes < 100) {
+            return bytes + " B";
+        }
+        double kilobytes = bytes / 1024.0;
+        if (kilobytes < 100) {
+            return String.format("%.2f KB", kilobytes);
+        }
+        double megabytes = kilobytes / 1024.0;
+        if (megabytes < 100) {
+            return String.format("%.2f MB", megabytes);
+        }
+        double gigabytes = megabytes / 1024.0;
+        if (gigabytes < 100) {
+            return String.format("%.2f GB", gigabytes);
+        }
+        double terabytes = gigabytes / 1024.0;
+        if (terabytes < 100) {
+            return String.format("%.2f TB", terabytes);
+        }
+        double petabytes = terabytes / 1024.0;
+        return String.format("%.2f PB", petabytes);
+    }
+    
+    
 }

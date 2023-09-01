@@ -20,9 +20,26 @@ public class SectorInfoVO {
     private String is_faulty;
     private String is_live;
     private String is_recovering;
+    private double qualityPower;
+    private String is_active;
     private Date reg_date;
     
     
+    
+    
+    
+	public String getIs_active() {
+		return is_active;
+	}
+	public void setIs_active(String is_active) {
+		this.is_active = is_active;
+	}
+	public double getQualityPower() {
+		return qualityPower;
+	}
+	public void setQualityPower(double qualityPower) {
+		this.qualityPower = qualityPower;
+	}
 	public String getMiner_id() {
 		return miner_id;
 	}
@@ -146,6 +163,12 @@ public class SectorInfoVO {
         if (other.is_recovering != null) {
             this.is_recovering = other.is_recovering;
         }
+        if (other.qualityPower > 0) {
+            this.qualityPower = other.qualityPower;
+        }
+        if (other.is_active !=null) {
+            this.is_active = other.is_active;
+        }
         return this;
     }
 	public Boolean isEmpty() {
@@ -161,6 +184,7 @@ public class SectorInfoVO {
 	               partition_id == null &&
 	               is_faulty == null &&
 	               is_live == null &&
+	               is_active == null &&
 	               is_recovering == null;
 	}
 	
