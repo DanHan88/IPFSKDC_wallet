@@ -53,13 +53,16 @@ public class NanoDCService {
     
     public NodeInfoVO processPrometheusData(List<String> data) {
     		double sectorSize =0;
+    		int mpool =0;
     	//Date now = new Date(System.currentTimeMillis());
     	 Map<String, SectorInfoVO> sectorVOHashMap = new HashMap<>();
+    	 NodeInfoVO nodeInfoVO = new NodeInfoVO();
         for(int i=0;i<data.size();i++) {
         	double qualityPower = 0;
         	
         	String line = data.get(i);
         	SectorInfoVO sectorInfoVO = new SectorInfoVO();
+        	
         	Boolean isSectorInfo = false;
         	if(line.indexOf("lotus_miner_sector_qa_power")>-1) {
         		String piece =line.split(" ")[1];
@@ -80,7 +83,17 @@ public class NanoDCService {
         			piece= piece.replace("e+", "E");
         			sectorSize = Double.parseDouble(piece);
         		}
+        	}else if(line.indexOf("lotus_info")>-1) {
+        		nodeInfoVO=parseInputStringNodeInfo(line);
+        	}else if(line.indexOf("lotus_mpool_local_total")>-1) {
+        		String piece =line.split(" ")[1];
+        		mpool = Integer.parseInt(piece);
+        	}else if(line.indexOf("lotus_wallet_balance")>-1) {
+        		
         	}
+        	
+        	
+        	
         	if(isSectorInfo) {
         		sectorInfoVO = parseInputString(line);
         		if(qualityPower>0) {
@@ -123,12 +136,13 @@ public class NanoDCService {
             superTotal +=sectorInfo.getQualityPower();
         }
         
-        NodeInfoVO nodeInfoVO = new NodeInfoVO();
+        
         nodeInfoVO.setQaPower(convertBytes(totalQA));
         nodeInfoVO.setRawPower(convertBytes(rawByte));
         nodeInfoVO.setCc(cc);
         nodeInfoVO.setVerified(verified);
         nodeInfoVO.setNonVerified(nonVerified);
+        nodeInfoVO.setMpool(mpool);
         
         return nodeInfoVO;
     }
@@ -175,6 +189,44 @@ public class NanoDCService {
             } 
         }
         return sectorInfo;
+    }  
+    public static NodeInfoVO parseInputStringNodeInfo(String input) {
+    	NodeInfoVO nodeInfoVO = new NodeInfoVO();
+        
+        Pattern pattern = Pattern.compile("(\\w+)=\"(.*?)\"");
+        Matcher matcher = pattern.matcher(input);
+        
+        while (matcher.find()) {
+            String fieldName = matcher.group(1);
+            String fieldValue = matcher.group(2);
+            if ("miner_id".equals(fieldName)) {
+            	nodeInfoVO.setMiner_id(fieldValue);
+            } else if ("network".equals(fieldName)) {
+            	nodeInfoVO.setNetwork(fieldName);
+            } else if ("version".equals(fieldName)) {
+            	nodeInfoVO.setVersion(fieldValue);
+            }
+        }
+        return nodeInfoVO;
+    }  
+    public static NodeInfoVO parseInputStringLotusWallet(String input) {
+    	NodeInfoVO nodeInfoVO = new NodeInfoVO();
+        
+        Pattern pattern = Pattern.compile("(\\w+)=\"(.*?)\"");
+        Matcher matcher = pattern.matcher(input);
+        
+        while (matcher.find()) {
+            String fieldName = matcher.group(1);
+            String fieldValue = matcher.group(2);
+            if ("miner_id".equals(fieldName)) {
+            	nodeInfoVO.setMiner_id(fieldValue);
+            } else if ("network".equals(fieldName)) {
+            	nodeInfoVO.setNetwork(fieldName);
+            } else if ("version".equals(fieldName)) {
+            	nodeInfoVO.setVersion(fieldValue);
+            }
+        }
+        return nodeInfoVO;
     }  
     public String convertBytes(double bytes) {
         if (bytes < 100) {
