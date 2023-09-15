@@ -23,7 +23,8 @@ import com.ipfs.kdc.vo.SectorInfoVO;
 @Service
 public class NanoDCService {
 	 
-	
+	@Autowired
+ 	UtilityService util;
 	@Autowired
 	NanoDCMapper nanoDCMapper;
 	
@@ -279,5 +280,35 @@ public class NanoDCService {
         return String.format("%.2f PB", petabytes);
     }
     
+    public NodeInfoVO initNodeInfo (String minerId) {
+    	 NodeInfoVO nodeInfoVO = new NodeInfoVO();
+         nodeInfoVO.setMiner_id(minerId);
+         nodeInfoVO = nanoDCMapper.selectLatestNodeInfo(nodeInfoVO);
+         nodeInfoVO.setLotusWalletVO(nanoDCMapper.selectLotusWalletVO(nodeInfoVO));
+         
+         int cc = nodeInfoVO.getCc();
+         int verified = nodeInfoVO.getVerified();
+         int nonVerified = nodeInfoVO.getNonVerified();
+         int total = cc + verified + nonVerified;
+         nodeInfoVO.setCc_percent(cc*100/total);
+         nodeInfoVO.setVerified_percent(verified*100/total);
+         nodeInfoVO.setNonVerified_percent(100 - nodeInfoVO.getCc_percent() - nodeInfoVO.getVerified_percent());
+         
+         List<LotusWalletVO> lotusWalletList = nodeInfoVO.getLotusWalletVO();
+         for(int i =0;i<lotusWalletList.size();i++) {
+         	lotusWalletList.get(i).setFil(util.roundDouble(lotusWalletList.get(i).getFil()));
+         }
+         
+         double feeDebt = util.roundDouble(nodeInfoVO.getFeeDebt());
+      	double initialPledge = util.roundDouble(nodeInfoVO.getInitialPledge());
+      	double lockedFunds = util.roundDouble(nodeInfoVO.getLockedFunds());
+      	double preCommiDeposits = util.roundDouble(nodeInfoVO.getPreCommiDeposits());
+         
+      	nodeInfoVO.setFeeDebt(feeDebt);
+      	nodeInfoVO.setInitialPledge(initialPledge);
+      	nodeInfoVO.setLockedFunds(lockedFunds);
+      	nodeInfoVO.setPreCommiDeposits(preCommiDeposits);
+    	return null;
+    }
     
 }

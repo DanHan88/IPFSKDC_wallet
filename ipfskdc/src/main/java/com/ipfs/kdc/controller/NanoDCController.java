@@ -1,6 +1,8 @@
 package com.ipfs.kdc.controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,30 +14,33 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ipfs.kdc.mapper.NanoDCMapper;
 import com.ipfs.kdc.service.NanoDCService;
+import com.ipfs.kdc.service.UtilityService;
+import com.ipfs.kdc.vo.LotusWalletVO;
 import com.ipfs.kdc.vo.NodeInfoVO;
 
 @Controller
 public class NanoDCController {
 
 	 @Autowired
-	    private NanoDCService nanoDCService;
+	    NanoDCService nanoDCService;
 	 @Autowired
 		NanoDCMapper nanoDCMapper;
-	
-	@GetMapping(value={"/monitor"})
-    public ModelAndView login(HttpServletRequest request,@RequestParam("monitorID") String monitorID) throws IOException {
-    	
+	 @Autowired
+	 	UtilityService util;
+	@GetMapping(value={"/monitor/nodeInfo"})
+    public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
+    	//f01227505
         ModelAndView mav = new ModelAndView();
-        NodeInfoVO nodeInfoVO = new NodeInfoVO();
-        nodeInfoVO.setMiner_id("f01227505");
-        nodeInfoVO = nanoDCMapper.selectLatestNodeInfo(nodeInfoVO);
-        nodeInfoVO.setLotusWalletVO(nanoDCMapper.selectLotusWalletVO(nodeInfoVO));
-        mav.addObject("nodeInfoVO", nodeInfoVO);
-        if(monitorID.equals("f001")) {
-        	mav.setViewName("views/cards");
-        }else if(monitorID.equals("f002")) {
-        	mav.setViewName("views/charts");
-        }
+        mav.addObject("nodeInfoVO", nanoDCService.initNodeInfo(minerId));
+        mav.setViewName("views/nodeInfo");
+        return mav;
+    }
+	@GetMapping(value={"/monitor/hardwareInfo"})
+    public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId,@RequestParam("hardwareId") String hardwareId) throws IOException {
+    	//f01227505
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("nodeInfoVO", nanoDCService.initNodeInfo(minerId));
+        mav.setViewName("views/nodeInfo");
         return mav;
     }
 	

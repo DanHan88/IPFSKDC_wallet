@@ -23,11 +23,30 @@ public class NodeInfoVO {
  	double preCommiDeposits;
     List<LotusWalletVO> lotusWalletVO;
     Date info_date;
-     
     
+    int cc_percent;
+    int verified_percent;
+    int nonVerified_percent;
+   
     
-    
-    
+	public int getCc_percent() {
+		return cc_percent;
+	}
+	public void setCc_percent(int cc_percent) {
+		this.cc_percent = cc_percent;
+	}
+	public int getVerified_percent() {
+		return verified_percent;
+	}
+	public void setVerified_percent(int verified_percent) {
+		this.verified_percent = verified_percent;
+	}
+	public int getNonVerified_percent() {
+		return nonVerified_percent;
+	}
+	public void setNonVerified_percent(int nonVerified_percent) {
+		this.nonVerified_percent = nonVerified_percent;
+	}
 	public Date getInfo_date() {
 		return info_date;
 	}

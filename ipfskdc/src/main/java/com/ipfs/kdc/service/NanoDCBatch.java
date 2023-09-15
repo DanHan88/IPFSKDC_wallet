@@ -38,7 +38,7 @@ public class NanoDCBatch {
         	lotusWalletVOList.get(i).setInfo_date(info_date);
         	nanoDCMapper.insertNewLotusWalletInfo(lotusWalletVOList.get(i));
         }     
-        System.out.println("스케줄러 성공!");
+        System.out.println("스케줄러 성공! 로컬에서 뜨면 안되요. 스케줄러 로컬테스트 환경에서는 꺼주세요");
     }
 }
 
