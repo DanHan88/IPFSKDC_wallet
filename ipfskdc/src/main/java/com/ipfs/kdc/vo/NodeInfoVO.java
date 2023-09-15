@@ -1,5 +1,6 @@
 package com.ipfs.kdc.vo;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -21,9 +22,18 @@ public class NodeInfoVO {
  	double lockedFunds;
  	double preCommiDeposits;
     List<LotusWalletVO> lotusWalletVO;
-	
+    Date info_date;
      
     
+    
+    
+    
+	public Date getInfo_date() {
+		return info_date;
+	}
+	public void setInfo_date(Date info_date) {
+		this.info_date = info_date;
+	}
 	public double getFeeDebt() {
 		return feeDebt;
 	}

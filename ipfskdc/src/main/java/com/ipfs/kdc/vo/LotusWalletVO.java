@@ -1,5 +1,7 @@
 package com.ipfs.kdc.vo;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Repository;
 
 @Repository(value="LotusWalletVO")
@@ -9,7 +11,16 @@ public class LotusWalletVO {
 	String miner_id;
 	String name;
 	double fil;
+	Date info_date;
 	
+	
+	
+	public Date getInfo_date() {
+		return info_date;
+	}
+	public void setInfo_date(Date info_date) {
+		this.info_date = info_date;
+	}
 	public String getAddress() {
 		return address;
 	}

@@ -77,7 +77,87 @@
 	    ) AS result
 	</select>
 	
+	<insert id="insertNewNodeInfo" parameterType ="com.ipfs.kdc.vo.NodeInfoVO">
+		INSERT INTO node_miner_info 
+			(miner_id, 
+			info_date, 
+			cc_cnt, 
+			verified_cnt, 
+			nonverified_cnt, 
+			network, 
+			version, 
+			mpool_cnt, 
+			fee_debt, 
+			initial_pledge, 
+			locked_fund, 
+			precommit_deposits,
+			qa_power,
+			raw_power)
+		VALUES 
+			(#{miner_id}, 
+			#{info_date}, 
+			#{cc}, 
+			#{verified}, 
+			#{nonVerified}, 
+			#{network}, 
+			#{version}, 
+			#{mpool}, 
+			#{feeDebt}, 
+			#{initialPledge}, 
+			#{lockedFunds}, 
+			#{preCommiDeposits},
+			#{qaPower},
+			#{rawPower})
+	</insert>
+	<insert id="insertNewLotusWalletInfo" parameterType ="com.ipfs.kdc.vo.LotusWalletVO">
+		INSERT INTO lotus_wallet 
+			(wallet_address, 
+			miner_id, 
+			info_date,  
+			name, 
+			fil)
+		VALUES 
+			(#{address}, 
+			#{miner_id}, 
+			#{info_date}, 
+			#{name}, 
+			#{fil})
+	</insert>
 
-
-
+	<select id="selectLatestNodeInfo" parameterType ="com.ipfs.kdc.vo.NodeInfoVO" resultType="com.ipfs.kdc.vo.NodeInfoVO">
+	SELECT 
+			miner_id, 
+			info_date, 
+			cc_cnt AS "cc", 
+			verified_cnt AS "verified", 
+			nonverified_cnt AS "nonVerified", 
+			network, 
+			version, 
+			mpool_cnt AS "mpool", 
+			fee_debt AS "feeDebt", 
+			initial_pledge AS "initialPledge", 
+			locked_fund AS "lockedFunds", 
+			precommit_deposits AS "preCommiDeposits",
+			qa_power AS "qaPower",
+			raw_power AS "rawPower"
+	FROM node_miner_info
+	WHERE miner_id =#{miner_id}
+	ORDER BY info_date DESC
+	LIMIT 1
+	</select>
+	<select id="selectLotusWalletVO" parameterType ="com.ipfs.kdc.vo.NodeInfoVO" resultType="com.ipfs.kdc.vo.LotusWalletVO">
+	SELECT 
+			wallet_address AS "address", 
+			miner_id, 
+			info_date,  
+			name, 
+			fil
+	FROM lotus_wallet
+	WHERE info_date = #{info_date} AND miner_id =#{miner_id}
+	</select>
+	
+	
+	
+	
+	
 </mapper>

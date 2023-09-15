@@ -9,7 +9,9 @@ package com.ipfs.kdc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @SpringBootApplication(scanBasePackages={"com.ipfs.kdc"})
 public class IpfskdcApplication {
     public static void main(String[] args) {
