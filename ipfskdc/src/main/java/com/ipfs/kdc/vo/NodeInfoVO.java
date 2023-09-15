@@ -1,5 +1,7 @@
 package com.ipfs.kdc.vo;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 @Repository(value="NodeInfoVO")
@@ -7,16 +9,51 @@ public class NodeInfoVO {
 
 	String qaPower;
 	String rawPower;
-	  int cc;
-     int verified;
-     int nonVerified;
-     String miner_id;
-     String network;
-     String version;
-     int mpool;
+	int cc;
+    int verified;
+    int nonVerified;
+    String miner_id;
+    String network;
+    String version;
+    int mpool;
+    double feeDebt;
+ 	double initialPledge;
+ 	double lockedFunds;
+ 	double preCommiDeposits;
+    List<LotusWalletVO> lotusWalletVO;
 	
      
     
+	public double getFeeDebt() {
+		return feeDebt;
+	}
+	public void setFeeDebt(double feeDebt) {
+		this.feeDebt = feeDebt;
+	}
+	public double getInitialPledge() {
+		return initialPledge;
+	}
+	public void setInitialPledge(double initialPledge) {
+		this.initialPledge = initialPledge;
+	}
+	public double getLockedFunds() {
+		return lockedFunds;
+	}
+	public void setLockedFunds(double lockedFunds) {
+		this.lockedFunds = lockedFunds;
+	}
+	public double getPreCommiDeposits() {
+		return preCommiDeposits;
+	}
+	public void setPreCommiDeposits(double preCommiDeposits) {
+		this.preCommiDeposits = preCommiDeposits;
+	}
+	public List<LotusWalletVO> getLotusWalletVO() {
+		return lotusWalletVO;
+	}
+	public void setLotusWalletVO(List<LotusWalletVO> lotusWalletVO) {
+		this.lotusWalletVO = lotusWalletVO;
+	}
 	public int getMpool() {
 		return mpool;
 	}
