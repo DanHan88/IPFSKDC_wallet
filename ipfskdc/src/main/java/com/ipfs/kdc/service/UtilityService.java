@@ -2,6 +2,9 @@ package com.ipfs.kdc.service;
 
 import java.text.DecimalFormat;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class UtilityService {
 
 	

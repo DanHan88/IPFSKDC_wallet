@@ -27,7 +27,7 @@ public class NanoDCController {
 		NanoDCMapper nanoDCMapper;
 	 @Autowired
 	 	UtilityService util;
-	@GetMapping(value={"/monitor/nodeInfo"})
+	@GetMapping(value={"/monitor_nodeInfo"})
     public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
     	//f01227505
         ModelAndView mav = new ModelAndView();
@@ -35,7 +35,7 @@ public class NanoDCController {
         mav.setViewName("views/nodeInfo");
         return mav;
     }
-	@GetMapping(value={"/monitor/hardwareInfo"})
+	@GetMapping(value={"/monitor_hardwareInfo"})
     public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId,@RequestParam("hardwareId") String hardwareId) throws IOException {
     	//f01227505
         ModelAndView mav = new ModelAndView();

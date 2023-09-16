@@ -308,7 +308,7 @@ public class NanoDCService {
       	nodeInfoVO.setInitialPledge(initialPledge);
       	nodeInfoVO.setLockedFunds(lockedFunds);
       	nodeInfoVO.setPreCommiDeposits(preCommiDeposits);
-    	return null;
+    	return nodeInfoVO;
     }
     
 }
