@@ -31,7 +31,7 @@ public class NanoDCBatch {
 			System.out.println("스케줄러 가 꺼져있네요!(로컬이면 정상)");
 			return;
 		}
-        List<String> prometeusData = nanoDCService.getPrometheusData("http://175.207.91.25:9101/metrics");
+        List<String> prometeusData = nanoDCService.getPrometheusData("http://58.121.116.101:9101/metrics");
         NodeInfoVO nodeInfoVO = nanoDCService.processPrometheusData(prometeusData);
         Date info_date = new Date();    
         Calendar calendar = Calendar.getInstance();
@@ -42,10 +42,11 @@ public class NanoDCBatch {
         nodeInfoVO.setInfo_date(info_date);
         nanoDCMapper.insertNewNodeInfo(nodeInfoVO);
         List<LotusWalletVO> lotusWalletVOList = nodeInfoVO.getLotusWalletVO();
+        
         for(int i =0;i<lotusWalletVOList.size();i++) {
         	lotusWalletVOList.get(i).setInfo_date(info_date);
-        	nanoDCMapper.insertNewLotusWalletInfo(lotusWalletVOList.get(i));
-        }     
+        	nanoDCMapper.insertNewLotusWalletInfo(lotusWalletVOList.get(i));}  
+        
         System.out.println("스케줄러 성공! 로컬에서 뜨면 안되요. 스케줄러 로컬테스트 환경에서는 꺼주세요");
     }
 }

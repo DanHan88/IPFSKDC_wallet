@@ -92,7 +92,11 @@
 			locked_fund, 
 			precommit_deposits,
 			qa_power,
-			raw_power)
+			raw_power,
+			total,
+			active,
+			faults,
+			recoveries)
 		VALUES 
 			(#{miner_id}, 
 			#{info_date}, 
@@ -107,7 +111,11 @@
 			#{lockedFunds}, 
 			#{preCommiDeposits},
 			#{qaPower},
-			#{rawPower})
+			#{rawPower},
+			#{total},
+			#{active},
+			#{faults},
+			#{recoveries})
 	</insert>
 	<insert id="insertNewLotusWalletInfo" parameterType ="com.ipfs.kdc.vo.LotusWalletVO">
 		INSERT INTO lotus_wallet 
@@ -139,7 +147,11 @@
 			locked_fund AS "lockedFunds", 
 			precommit_deposits AS "preCommiDeposits",
 			qa_power AS "qaPower",
-			raw_power AS "rawPower"
+			raw_power AS "rawPower",
+			total,
+			active,
+			faults,
+			recoveries
 	FROM node_miner_info
 	WHERE miner_id =#{miner_id}
 	ORDER BY info_date DESC
@@ -155,9 +167,4 @@
 	FROM lotus_wallet
 	WHERE info_date = #{info_date} AND miner_id =#{miner_id}
 	</select>
-	
-	
-	
-	
-	
 </mapper>

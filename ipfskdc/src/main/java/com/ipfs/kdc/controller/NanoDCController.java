@@ -31,7 +31,8 @@ public class NanoDCController {
     public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
     	//f01227505
         ModelAndView mav = new ModelAndView();
-        mav.addObject("nodeInfoVO", nanoDCService.initNodeInfo(minerId));
+        NodeInfoVO nodeInfoVO = nanoDCService.initNodeInfo(minerId);
+        mav.addObject("nodeInfoVO", nodeInfoVO);
         mav.setViewName("views/nodeInfo");
         return mav;
     }

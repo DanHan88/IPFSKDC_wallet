@@ -27,8 +27,35 @@ public class NodeInfoVO {
     int cc_percent;
     int verified_percent;
     int nonVerified_percent;
-   
-    
+    int total;
+    int active;
+    int faults;
+    int recoveries;
+
+	public int getTotal() {
+		return total;
+	}
+	public void setTotal(int total) {
+		this.total = total;
+	}
+	public int getActive() {
+		return active;
+	}
+	public void setActive(int active) {
+		this.active = active;
+	}
+	public int getFaults() {
+		return faults;
+	}
+	public void setFaults(int faults) {
+		this.faults = faults;
+	}
+	public int getRecoveries() {
+		return recoveries;
+	}
+	public void setRecoveries(int recoveries) {
+		this.recoveries = recoveries;
+	}
 	public int getCc_percent() {
 		return cc_percent;
 	}

@@ -135,16 +135,21 @@ public class NanoDCService {
         int cc =0;
         int verified =0;
         int nonVerified =0;
+        int total =0;
+        int active=0;
+        int faults=0;
+        int recoveries=0;
         
         
         
         for (Map.Entry<String, SectorInfoVO> entry : sectorVOHashMap.entrySet()) {
-            String id = entry.getKey();
             SectorInfoVO sectorInfo = entry.getValue();
-            if(sectorInfo.getIs_live()!=null && sectorInfo.getIs_faulty() !=null && sectorInfo.getIs_active() !=null&&sectorInfo.getIs_live().equals("True") &&sectorInfo.getIs_faulty().equals("False")&&sectorInfo.getIs_active().equals("True")) {
+            if(sectorInfo.getIs_live()==null || sectorInfo.getIs_faulty() ==null || sectorInfo.getIs_active() ==null) continue;
+            total++;
+            if(sectorInfo.getIs_live().equals("True") &&sectorInfo.getIs_faulty().equals("False")&&sectorInfo.getIs_active().equals("True")) {
             	totalQA +=sectorInfo.getQualityPower();
             	rawByte += sectorSize;	
-            	
+            	active++;
             	if(sectorInfo.getDeals().equals("0")) {
                 	cc++;
                 }else if(sectorInfo.getPledged().equals("0")) {
@@ -152,10 +157,15 @@ public class NanoDCService {
                 }else {
                 	verified++;
                 }
-            }       
+            } 
+            else if(sectorInfo.getIs_live().equals("True") &&sectorInfo.getIs_faulty().equals("True")) {
+            	faults++;
+            }
+            else if(sectorInfo.getIs_live().equals("True") &&sectorInfo.getIs_recovering().equals("True")){
+            	recoveries++;
+            }
             superTotal +=sectorInfo.getQualityPower();
         }
-        
         nodeInfoVO.setFeeDebt(feeDebt);
         nodeInfoVO.setInitialPledge(initialPledge);
         nodeInfoVO.setLockedFunds(lockedFunds);
@@ -167,6 +177,10 @@ public class NanoDCService {
         nodeInfoVO.setNonVerified(nonVerified);
         nodeInfoVO.setMpool(mpool);
         nodeInfoVO.setLotusWalletVO(lotuswalletVOList);
+        nodeInfoVO.setTotal(total);
+        nodeInfoVO.setActive(active);
+        nodeInfoVO.setFaults(faults);
+        nodeInfoVO.setRecoveries(recoveries);
         
         return nodeInfoVO;
     }
