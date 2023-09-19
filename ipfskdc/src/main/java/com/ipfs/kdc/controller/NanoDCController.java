@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ipfs.kdc.mapper.NanoDCMapper;
 import com.ipfs.kdc.service.NanoDCService;
 import com.ipfs.kdc.service.UtilityService;
+import com.ipfs.kdc.vo.HardWareInfoVO;
 import com.ipfs.kdc.vo.LotusWalletVO;
 import com.ipfs.kdc.vo.NodeInfoVO;
 
@@ -28,8 +29,8 @@ public class NanoDCController {
 	 @Autowired
 	 	UtilityService util;
 	@GetMapping(value={"/monitor_nodeInfo"})
-    public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
-    	//f01227505
+    public ModelAndView nodeInfo(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
+    	//f01227505 //f01695888
         ModelAndView mav = new ModelAndView();
         NodeInfoVO nodeInfoVO = nanoDCService.initNodeInfo(minerId);
         mav.addObject("nodeInfoVO", nodeInfoVO);
@@ -37,14 +38,15 @@ public class NanoDCController {
         return mav;
     }
 	@GetMapping(value={"/monitor_hardwareInfo"})
-    public ModelAndView login(HttpServletRequest request,@RequestParam("minerId") String minerId,@RequestParam("hardwareId") String hardwareId) throws IOException {
-    	//f01227505
+    public ModelAndView hardwareInfo(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
+    	//f01227505 //f01695888
         ModelAndView mav = new ModelAndView();
-        mav.addObject("nodeInfoVO", nanoDCService.initNodeInfo(minerId));
-        mav.setViewName("views/nodeInfo");
+        HardWareInfoVO hardWareInfoVO = new HardWareInfoVO();
+        hardWareInfoVO.setMiner_id(minerId);
+        hardWareInfoVO.setSource_link("http://121.178.82.230:9100/metrics");
+        hardWareInfoVO = nanoDCMapper.selectLatestHardWareInfo(hardWareInfoVO);
+        mav.addObject("hardWareInfoVO", hardWareInfoVO);
+        mav.setViewName("views/hardWareInfo");
         return mav;
     }
-	
-	
-	
 }

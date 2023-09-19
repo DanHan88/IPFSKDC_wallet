@@ -167,4 +167,36 @@
 	FROM lotus_wallet
 	WHERE info_date = #{info_date} AND miner_id =#{miner_id}
 	</select>
+	
+	
+	
+	<insert id="insertNewHardWareInfo" parameterType ="com.ipfs.kdc.vo.HardWareInfoVO">
+		INSERT INTO hardWareInfo 
+			(miner_id, 
+			info_date, 
+			source_link, 
+			cpu_busy, 
+			ram_used, 
+			swap_used)
+		VALUES 
+			(#{miner_id}, 
+			#{info_date}, 
+			#{source_link}, 
+			#{cpu_busy}, 
+			#{ram_used}, 
+			#{swap_used})
+	</insert>
+	<select id="selectLatestHardWareInfo" parameterType ="com.ipfs.kdc.vo.HardWareInfoVO" resultType="com.ipfs.kdc.vo.HardWareInfoVO">
+	SELECT 
+			miner_id, 
+			info_date, 
+			source_link, 
+			cpu_busy, 
+			ram_used, 
+			swap_used
+	FROM hardWareInfo
+	WHERE miner_id =#{miner_id} AND source_link=#{source_link}
+	ORDER BY info_date DESC
+	LIMIT 1
+	</select>
 </mapper>

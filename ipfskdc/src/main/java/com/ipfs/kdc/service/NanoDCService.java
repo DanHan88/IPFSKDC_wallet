@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ipfs.kdc.mapper.NanoDCMapper;
+import com.ipfs.kdc.vo.HardWareInfoVO;
 import com.ipfs.kdc.vo.LotusWalletVO;
 import com.ipfs.kdc.vo.NodeInfoVO;
 import com.ipfs.kdc.vo.SectorInfoVO;
@@ -51,7 +54,61 @@ public class NanoDCService {
             throw new IOException("Failed to fetch data from Prometheus endpoint. Response code: " + responseCode);
         }
     }
-    
+    public HardWareInfoVO processPrometheusDataForHardWare(List<String> data) {
+    	double totalCPUUsage =0;
+    	double totalCPUCapacity =0;
+    	double memoryTotal =0;
+    	double memoryFree = 0;
+    	double totalSwapMemory = 0;
+    	double totalswapFreeByte = 0;
+    	
+    	for(int i=0;i<data.size();i++) {
+    		String line = data.get(i);
+    		if(line.indexOf("node_cpu_seconds_total")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			totalCPUCapacity += Double.parseDouble(piece);
+        			if(line.indexOf("idle")<0){
+        				totalCPUUsage += Double.parseDouble(piece);
+        			}
+        		}
+        	}else if(line.indexOf("node_memory_MemTotal_bytes")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			memoryTotal = Double.parseDouble(piece);
+        		}
+        	}else if(line.indexOf("node_memory_MemFree_bytes")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			memoryFree = Double.parseDouble(piece);
+        		}
+        	}else if(line.indexOf("node_memory_SwapTotal_bytes")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			totalSwapMemory = Double.parseDouble(piece);
+        		} 
+        	} else if(line.indexOf("node_memory_SwapFree_bytes")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			totalswapFreeByte = Double.parseDouble(piece);
+        		}
+        	} 
+    	}
+    	
+    	double cpuBusy = totalCPUUsage/totalCPUCapacity*100;
+    	double ramUsed = memoryFree/memoryTotal*100;
+    	double swapUsed = (totalSwapMemory- totalswapFreeByte)/totalSwapMemory*100;
+    	HardWareInfoVO hardWareInfoVO = new HardWareInfoVO();
+    	hardWareInfoVO.setCpu_busy(cpuBusy);
+    	hardWareInfoVO.setRam_used(ramUsed);
+    	hardWareInfoVO.setSwap_used(swapUsed);
+    	return hardWareInfoVO;
+    }
     public NodeInfoVO processPrometheusData(List<String> data) {
     		double sectorSize =0;
     		double feeDebt =0;
@@ -65,10 +122,8 @@ public class NanoDCService {
     	 NodeInfoVO nodeInfoVO = new NodeInfoVO();
         for(int i=0;i<data.size();i++) {
         	double qualityPower = 0;
-        	
         	String line = data.get(i);
         	SectorInfoVO sectorInfoVO = new SectorInfoVO();
-        	
         	Boolean isSectorInfo = false;
         	if(line.indexOf("lotus_miner_sector_qa_power")>-1) {
         		String piece =line.split(" ")[1];
@@ -324,5 +379,27 @@ public class NanoDCService {
       	nodeInfoVO.setPreCommiDeposits(preCommiDeposits);
     	return nodeInfoVO;
     }
+    //"http://58.121.116.101:9101/metrics"
+    public void scheduledUpdateNodeInfo(String sourceLink, Date info_date) throws IOException {
+    	 List<String> prometeusData = getPrometheusData(sourceLink);
+         NodeInfoVO nodeInfoVO = processPrometheusData(prometeusData);
+         nodeInfoVO.setInfo_date(info_date);
+         nanoDCMapper.insertNewNodeInfo(nodeInfoVO);
+         List<LotusWalletVO> lotusWalletVOList = nodeInfoVO.getLotusWalletVO();
+         
+         for(int i =0;i<lotusWalletVOList.size();i++) {
+         	lotusWalletVOList.get(i).setInfo_date(info_date);
+         	nanoDCMapper.insertNewLotusWalletInfo(lotusWalletVOList.get(i));} 
+    }
+    
+    public void scheduledUpdateHardWareInfo(String sourceLink, Date info_date, String miner_id) throws IOException {
+   	 List<String> prometeusData = getPrometheusData(sourceLink);
+   	HardWareInfoVO hardWareInfoVO = processPrometheusDataForHardWare(prometeusData);
+   	hardWareInfoVO.setInfo_date(info_date);
+   	hardWareInfoVO.setMiner_id(miner_id);
+   	hardWareInfoVO.setSource_link(sourceLink);
+   	nanoDCMapper.insertNewHardWareInfo(hardWareInfoVO);
+   	
+   }
     
 }

@@ -26,28 +26,21 @@ public class NanoDCBatch {
 	
 	@Scheduled(cron = "0 */10 * * * ?") // Runs every 10 minutes
     public void runBatchJob() throws IOException {
-
 		if(batchEnabled.equals("false")) {
 			System.out.println("스케줄러 가 꺼져있네요!(로컬이면 정상)");
 			return;
 		}
-        List<String> prometeusData = nanoDCService.getPrometheusData("http://58.121.116.101:9101/metrics");
-        NodeInfoVO nodeInfoVO = nanoDCService.processPrometheusData(prometeusData);
-        Date info_date = new Date();    
+		Date info_date = new Date();    
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(info_date);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         info_date = calendar.getTime();
-        nodeInfoVO.setInfo_date(info_date);
-        nanoDCMapper.insertNewNodeInfo(nodeInfoVO);
-        List<LotusWalletVO> lotusWalletVOList = nodeInfoVO.getLotusWalletVO();
-        
-        for(int i =0;i<lotusWalletVOList.size();i++) {
-        	lotusWalletVOList.get(i).setInfo_date(info_date);
-        	nanoDCMapper.insertNewLotusWalletInfo(lotusWalletVOList.get(i));}  
-        
-        System.out.println("스케줄러 성공! 로컬에서 뜨면 안되요. 스케줄러 로컬테스트 환경에서는 꺼주세요");
+		//nanoDCService.scheduledUpdateNodeInfo("http://58.121.116.101:9101/metrics");
+        String miner_id = "f01695888";
+        nanoDCService.scheduledUpdateNodeInfo("http://121.178.82.230:9101/metrics",info_date);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.230:9100/metrics",info_date,miner_id);
+		System.out.println("스케줄러 성공! 로컬에서 뜨면 안되요. 스케줄러 로컬테스트 환경에서는 꺼주세요");
     }
 }
 
