@@ -13,16 +13,16 @@ public class HardWareInfoVO {
 	double cpu_busy;
 	double ram_used;
 	double swap_used;
-	double root_fs_Used;
+	double root_fs_used;
 	
 	
 	
 
-	public double getRoot_fs_Used() {
-		return root_fs_Used;
+	public double getRoot_fs_used() {
+		return root_fs_used;
 	}
-	public void setRoot_fs_Used(double root_fs_Used) {
-		this.root_fs_Used = root_fs_Used;
+	public void setRoot_fs_used(double root_fs_used) {
+		this.root_fs_used = root_fs_used;
 	}
 	public String getMiner_id() {
 		return miner_id;

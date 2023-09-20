@@ -9,11 +9,9 @@ public class UtilityService {
 
 	
 	public double roundDouble (double value) {
-		 DecimalFormat df = new DecimalFormat("#.##");
-		return Double.parseDouble(df.format(value));
+		return Math.round(value * 100.0) / 100.0;
 	}
 	public double roundOnce (double value) {
-		 DecimalFormat df = new DecimalFormat("#.#");
-		return Double.parseDouble(df.format(value));
+		return Math.round(value * 10.0) / 10.0;
 	}
 }

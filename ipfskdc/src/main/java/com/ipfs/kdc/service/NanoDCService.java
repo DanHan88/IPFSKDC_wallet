@@ -103,13 +103,13 @@ public class NanoDCService {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			totalswapFreeByte = Double.parseDouble(piece);
+        			fileSystemAvailable = Double.parseDouble(piece);
         		}
         	} else if(line.indexOf("node_filesystem_size_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			totalswapFreeByte = Double.parseDouble(piece);
+        			fileSystemTotal = Double.parseDouble(piece);
         		}
         	} 
     	}
@@ -122,7 +122,7 @@ public class NanoDCService {
     	hardWareInfoVO.setCpu_busy(util.roundOnce(cpuBusy));
     	hardWareInfoVO.setRam_used(util.roundOnce(ramUsed));
     	hardWareInfoVO.setSwap_used(util.roundOnce(swapUsed));
-    	hardWareInfoVO.setRoot_fs_Used(util.roundOnce(rootFsUsed));
+    	hardWareInfoVO.setRoot_fs_used(util.roundOnce(rootFsUsed));
     	
     	return hardWareInfoVO;
     }
