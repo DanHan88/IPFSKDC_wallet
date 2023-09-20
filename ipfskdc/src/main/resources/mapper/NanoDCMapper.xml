@@ -178,7 +178,12 @@
 			cpu_busy, 
 			ram_used, 
 			swap_used,
-			root_fs_used)
+			root_fs_used,
+			root_fs_total,
+			ram_total,
+			swap_total,
+			cpu_count,
+			uptime)
 		VALUES 
 			(#{miner_id}, 
 			#{info_date}, 
@@ -186,7 +191,13 @@
 			#{cpu_busy}, 
 			#{ram_used}, 
 			#{swap_used},
-			#{root_fs_used})
+			#{root_fs_used},
+			#{root_fs_total},
+			#{ram_total},
+			#{swap_total},
+			#{cpu_count},
+			#{uptime}
+			)
 	</insert>
 	<select id="selectLatestHardWareInfo" parameterType ="com.ipfs.kdc.vo.HardWareInfoVO" resultType="com.ipfs.kdc.vo.HardWareInfoVO">
 	SELECT 
@@ -196,7 +207,12 @@
 			cpu_busy, 
 			ram_used, 
 			swap_used,
-			root_fs_used
+			root_fs_used,
+			root_fs_total,
+			ram_total,
+			swap_total,
+			cpu_count,
+			uptime
 	FROM hardWareInfo
 	WHERE miner_id =#{miner_id} AND source_link=#{source_link}
 	ORDER BY info_date DESC

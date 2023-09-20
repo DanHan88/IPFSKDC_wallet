@@ -14,10 +14,45 @@ public class HardWareInfoVO {
 	double ram_used;
 	double swap_used;
 	double root_fs_used;
+	String root_fs_total;
+	String ram_total;
+	String swap_total;
+	int cpu_count;
+	String uptime;
 	
 	
 	
 
+	public String getUptime() {
+		return uptime;
+	}
+	public void setUptime(String uptime) {
+		this.uptime = uptime;
+	}
+	public String getRoot_fs_total() {
+		return root_fs_total;
+	}
+	public void setRoot_fs_total(String root_fs_total) {
+		this.root_fs_total = root_fs_total;
+	}
+	public String getRam_total() {
+		return ram_total;
+	}
+	public void setRam_total(String ram_total) {
+		this.ram_total = ram_total;
+	}
+	public String getSwap_total() {
+		return swap_total;
+	}
+	public void setSwap_total(String swap_total) {
+		this.swap_total = swap_total;
+	}
+	public int getCpu_count() {
+		return cpu_count;
+	}
+	public void setCpu_count(int cpu_count) {
+		this.cpu_count = cpu_count;
+	}
 	public double getRoot_fs_used() {
 		return root_fs_used;
 	}

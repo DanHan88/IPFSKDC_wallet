@@ -63,6 +63,9 @@ public class NanoDCService {
     	double totalswapFreeByte = 0;
     	double fileSystemAvailable = 0;
     	double fileSystemTotal = 0;
+    	double nodeBootTime = 0;
+    	double nodeTime = 0;
+    	int cpu_cnt=0;
     	
     	for(int i=0;i<data.size();i++) {
     		String line = data.get(i);
@@ -73,49 +76,63 @@ public class NanoDCService {
         			totalCPUCapacity += Double.parseDouble(piece);
         			if(line.indexOf("idle")<0){
         				totalCPUUsage += Double.parseDouble(piece);
+        			}else {
+        				cpu_cnt++;
         			}
         		}
         	}else if(line.indexOf("node_memory_MemTotal_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			memoryTotal = Double.parseDouble(piece);
+        			memoryTotal += Double.parseDouble(piece);
         		}
         	}else if(line.indexOf("node_memory_MemFree_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			memoryFree = Double.parseDouble(piece);
+        			memoryFree += Double.parseDouble(piece);
         		}
         	}else if(line.indexOf("node_memory_SwapTotal_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			totalSwapMemory = Double.parseDouble(piece);
+        			totalSwapMemory += Double.parseDouble(piece);
         		} 
         	} else if(line.indexOf("node_memory_SwapFree_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			totalswapFreeByte = Double.parseDouble(piece);
+        			totalswapFreeByte += Double.parseDouble(piece);
         		}
         	} else if(line.indexOf("node_filesystem_avail_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			fileSystemAvailable = Double.parseDouble(piece);
+        			fileSystemAvailable += Double.parseDouble(piece);
         		}
         	} else if(line.indexOf("node_filesystem_size_bytes")>-1) {
         		String piece =line.split(" ")[1];
         		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
         			piece= piece.replace("e+", "E");
-        			fileSystemTotal = Double.parseDouble(piece);
+        			fileSystemTotal += Double.parseDouble(piece);
+        		}
+        	} else if(line.indexOf("node_boot_time_seconds")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			nodeBootTime = Double.parseDouble(piece);
+        		}
+        	} else if(line.indexOf("node_time_seconds")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			nodeTime = Double.parseDouble(piece);
         		}
         	} 
     	}
     	
     	double cpuBusy = totalCPUUsage/totalCPUCapacity*100;
-    	double ramUsed = memoryFree/memoryTotal*100;
+    	double ramUsed = (memoryFree)/memoryTotal*100;
     	double swapUsed = (totalSwapMemory- totalswapFreeByte)/totalSwapMemory*100;
     	double rootFsUsed = (fileSystemTotal-fileSystemAvailable)*100/fileSystemTotal;
     	HardWareInfoVO hardWareInfoVO = new HardWareInfoVO();
@@ -123,7 +140,11 @@ public class NanoDCService {
     	hardWareInfoVO.setRam_used(util.roundOnce(ramUsed));
     	hardWareInfoVO.setSwap_used(util.roundOnce(swapUsed));
     	hardWareInfoVO.setRoot_fs_used(util.roundOnce(rootFsUsed));
-    	
+    	hardWareInfoVO.setRam_total(convertBytes(memoryTotal));
+    	hardWareInfoVO.setSwap_total(convertBytes(totalswapFreeByte));
+    	hardWareInfoVO.setRoot_fs_total(convertBytes(fileSystemTotal));
+    	hardWareInfoVO.setCpu_count(cpu_cnt);
+    	hardWareInfoVO.setUptime(convertTime(nodeTime-nodeBootTime));
     	return hardWareInfoVO;
     }
     public NodeInfoVO processPrometheusData(List<String> data) {
@@ -365,6 +386,33 @@ public class NanoDCService {
         double petabytes = terabytes / 1024.0;
         return String.format("%.2f PB", petabytes);
     }
+    public String convertTime(double sec) {
+        if (sec < 60) {
+            return sec + " seconds";
+        }
+        double minute = sec / 60;
+        if (minute < 60) {
+            return String.format("%f minutes", minute);
+        }
+        double hour = minute / 60;
+        if (hour < 24) {
+            return String.format("%f hours", hour);
+        }
+        double day = hour / 60;
+        if (day < 7) {
+            return String.format("%f days", day);
+        }
+        double week = day / 7;
+        if (week < 4) {
+            return String.format("%f weeks", week);
+        }
+        double month = week / 4;
+        if (month < 12) {
+        	 return String.format("%f months", month);
+        }
+        return String.format("%f years", month/12);
+    }
+    
     
     public NodeInfoVO initNodeInfo (String minerId) {
     	 NodeInfoVO nodeInfoVO = new NodeInfoVO();
