@@ -61,6 +61,8 @@ public class NanoDCService {
     	double memoryFree = 0;
     	double totalSwapMemory = 0;
     	double totalswapFreeByte = 0;
+    	double fileSystemAvailable = 0;
+    	double fileSystemTotal = 0;
     	
     	for(int i=0;i<data.size();i++) {
     		String line = data.get(i);
@@ -97,16 +99,31 @@ public class NanoDCService {
         			piece= piece.replace("e+", "E");
         			totalswapFreeByte = Double.parseDouble(piece);
         		}
+        	} else if(line.indexOf("node_filesystem_avail_bytes")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			totalswapFreeByte = Double.parseDouble(piece);
+        		}
+        	} else if(line.indexOf("node_filesystem_size_bytes")>-1) {
+        		String piece =line.split(" ")[1];
+        		if (piece.matches("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?")) {
+        			piece= piece.replace("e+", "E");
+        			totalswapFreeByte = Double.parseDouble(piece);
+        		}
         	} 
     	}
     	
     	double cpuBusy = totalCPUUsage/totalCPUCapacity*100;
     	double ramUsed = memoryFree/memoryTotal*100;
     	double swapUsed = (totalSwapMemory- totalswapFreeByte)/totalSwapMemory*100;
+    	double rootFsUsed = (fileSystemTotal-fileSystemAvailable)*100/fileSystemTotal;
     	HardWareInfoVO hardWareInfoVO = new HardWareInfoVO();
-    	hardWareInfoVO.setCpu_busy(cpuBusy);
-    	hardWareInfoVO.setRam_used(ramUsed);
-    	hardWareInfoVO.setSwap_used(swapUsed);
+    	hardWareInfoVO.setCpu_busy(util.roundOnce(cpuBusy));
+    	hardWareInfoVO.setRam_used(util.roundOnce(ramUsed));
+    	hardWareInfoVO.setSwap_used(util.roundOnce(swapUsed));
+    	hardWareInfoVO.setRoot_fs_Used(util.roundOnce(rootFsUsed));
+    	
     	return hardWareInfoVO;
     }
     public NodeInfoVO processPrometheusData(List<String> data) {
@@ -352,7 +369,7 @@ public class NanoDCService {
     public NodeInfoVO initNodeInfo (String minerId) {
     	 NodeInfoVO nodeInfoVO = new NodeInfoVO();
          nodeInfoVO.setMiner_id(minerId);
-         nodeInfoVO = nanoDCMapper.selectLatestNodeInfo(nodeInfoVO);
+         nodeInfoVO=nanoDCMapper.selectLatestNodeInfo(nodeInfoVO);
          nodeInfoVO.setLotusWalletVO(nanoDCMapper.selectLotusWalletVO(nodeInfoVO));
          
          int cc = nodeInfoVO.getCc();

@@ -12,4 +12,8 @@ public class UtilityService {
 		 DecimalFormat df = new DecimalFormat("#.##");
 		return Double.parseDouble(df.format(value));
 	}
+	public double roundOnce (double value) {
+		 DecimalFormat df = new DecimalFormat("#.#");
+		return Double.parseDouble(df.format(value));
+	}
 }
