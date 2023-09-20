@@ -183,7 +183,8 @@
 			ram_total,
 			swap_total,
 			cpu_count,
-			uptime)
+			uptime,
+			node_name)
 		VALUES 
 			(#{miner_id}, 
 			#{info_date}, 
@@ -196,7 +197,8 @@
 			#{ram_total},
 			#{swap_total},
 			#{cpu_count},
-			#{uptime}
+			#{uptime},
+			#{node_name}
 			)
 	</insert>
 	<select id="selectLatestHardWareInfo" parameterType ="com.ipfs.kdc.vo.HardWareInfoVO" resultType="com.ipfs.kdc.vo.HardWareInfoVO">
@@ -212,7 +214,8 @@
 			ram_total,
 			swap_total,
 			cpu_count,
-			uptime
+			uptime,
+			node_name
 	FROM hardWareInfo
 	WHERE miner_id =#{miner_id} AND source_link=#{source_link}
 	ORDER BY info_date DESC

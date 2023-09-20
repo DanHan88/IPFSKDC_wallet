@@ -49,4 +49,41 @@ public class NanoDCController {
         mav.setViewName("views/hardWareInfo");
         return mav;
     }
+	@GetMapping(value={"/monitor_boostInfo"})
+    public ModelAndView boostInfo(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
+    	//f01227505 //f01695888
+		ModelAndView mav = new ModelAndView();
+        NodeInfoVO nodeInfoVO = nanoDCService.initNodeInfo(minerId);
+        mav.addObject("nodeInfoVO", nodeInfoVO);
+        mav.setViewName("views/boostInfo");
+        return mav;
+    }
+	@GetMapping(value={"/monitor_rackInfo"})
+    public ModelAndView rackInfo(HttpServletRequest request) throws IOException {
+    	//f01227505 //f01695888
+		ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/rackInfo");
+        return mav;
+    }
+	@GetMapping(value={"/monitor_switchInfo"})
+    public ModelAndView switchInfo(HttpServletRequest request) throws IOException {
+    	//f01227505 //f01695888
+		ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/switchInfo");
+        return mav;
+    }
+	@GetMapping(value={"/monitor_upsController"})
+    public ModelAndView upsController(HttpServletRequest request) throws IOException {
+    	//f01227505 //f01695888
+		ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/upsController");
+        return mav;
+    }
+	@GetMapping(value={"/404"})
+    public ModelAndView page404(HttpServletRequest request) throws IOException {
+    	//f01227505 //f01695888
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/404page");
+        return mav;
+    }
 }

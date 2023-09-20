@@ -43,7 +43,7 @@ public class NanoDCService {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-            	if(inputLine.indexOf("#")==-1) {
+            	if(inputLine.indexOf("# HELP")==-1 && inputLine.indexOf("# TYPE")==-1) {
             		fullData.add(inputLine);
             	}
             }
@@ -66,6 +66,7 @@ public class NanoDCService {
     	double nodeBootTime = 0;
     	double nodeTime = 0;
     	int cpu_cnt=0;
+    	String node_name="";
     	
     	for(int i=0;i<data.size();i++) {
     		String line = data.get(i);
@@ -128,7 +129,16 @@ public class NanoDCService {
         			piece= piece.replace("e+", "E");
         			nodeTime = Double.parseDouble(piece);
         		}
+        	} else if(line.indexOf("node_uname_info")>-1) {
+        		Pattern pattern = Pattern.compile("nodename=\"([^\"]+)\"");
+        		Matcher matcher = pattern.matcher(line);
+        		if (matcher.find()) {
+        			node_name = matcher.group(1); 
+                } 
         	} 
+    		
+    		
+    		
     	}
     	
     	double cpuBusy = totalCPUUsage/totalCPUCapacity*100;
@@ -145,6 +155,7 @@ public class NanoDCService {
     	hardWareInfoVO.setRoot_fs_total(convertBytes(fileSystemTotal));
     	hardWareInfoVO.setCpu_count(cpu_cnt);
     	hardWareInfoVO.setUptime(convertTime(nodeTime-nodeBootTime));
+    	hardWareInfoVO.setNode_name(node_name);
     	return hardWareInfoVO;
     }
     public NodeInfoVO processPrometheusData(List<String> data) {
@@ -388,29 +399,29 @@ public class NanoDCService {
     }
     public String convertTime(double sec) {
         if (sec < 60) {
-            return sec + " seconds";
+            return sec + " Seconds";
         }
         double minute = sec / 60;
         if (minute < 60) {
-            return String.format("%f minutes", minute);
+            return String.format("%.2f Minutes", minute);
         }
         double hour = minute / 60;
         if (hour < 24) {
-            return String.format("%f hours", hour);
+            return String.format("%.2f Hours", hour);
         }
         double day = hour / 60;
         if (day < 7) {
-            return String.format("%f days", day);
+            return String.format("%.2f Days", day);
         }
         double week = day / 7;
         if (week < 4) {
-            return String.format("%f weeks", week);
+            return String.format("%.2f Weeks", week);
         }
         double month = week / 4;
         if (month < 12) {
-        	 return String.format("%f months", month);
+        	 return String.format("%.2f Months", month);
         }
-        return String.format("%f years", month/12);
+        return String.format("%.2f Years", month/12);
     }
     
     

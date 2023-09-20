@@ -19,10 +19,18 @@ public class HardWareInfoVO {
 	String swap_total;
 	int cpu_count;
 	String uptime;
+	String node_name;
+	
 	
 	
 	
 
+	public String getNode_name() {
+		return node_name;
+	}
+	public void setNode_name(String node_name) {
+		this.node_name = node_name;
+	}
 	public String getUptime() {
 		return uptime;
 	}
