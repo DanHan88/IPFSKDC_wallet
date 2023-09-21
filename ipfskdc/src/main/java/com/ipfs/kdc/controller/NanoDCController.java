@@ -93,4 +93,11 @@ public class NanoDCController {
         mav.setViewName("views/404page");
         return mav;
     }
+	@GetMapping(value={"/monitor_homepage"})
+    public ModelAndView hompage(HttpServletRequest request) throws IOException {
+    	//f01227505
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/homepage");
+        return mav;
+    }
 }
