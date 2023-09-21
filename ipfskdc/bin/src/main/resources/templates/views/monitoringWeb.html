@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR">
+<title>NANODC</title>
+</head>
+<body>
+	<img id="imgId" th:src="${data.imgUrl}" alt="첨부이미지" th:if="${data.imgUrl != null}" />
+</body>
+</html>
