@@ -184,28 +184,28 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #8A1B67;">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #28D2D1;">
                                                 Initial Pledge</div>
                                             <div class="h5 mb-0 font-weight-bold text-white"><p th:text="${nodeInfoVO.initialPledge}"></p></div>
                                         </div>
                                     </div>
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #8A1B67;">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #28D2D1;">
                                                 Locked Funds</div>
                                             <div class="h5 mb-0 font-weight-bold text-white"><p th:text="${nodeInfoVO.lockedFunds}"></p></div>
                                         </div>
                                     </div>
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #8A1B67;">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #28D2D1;">
                                                 FEE DEBTS</div>
                                             <div class="h5 mb-0 font-weight-bold text-white"><p th:text="${nodeInfoVO.feeDebt}"></p></div>
                                         </div>
                                     </div>
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #8A1B67;">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #28D2D1;">
                                                 Pre Commit Deposits</div>
                                             <div class="h5 mb-0 font-weight-bold text-white"><p th:text="${nodeInfoVO.preCommiDeposits}"></p></div>
                                         </div>
@@ -218,17 +218,17 @@
                             <div class="card shadow h-100 py-2" style="background-color:#09162A;border: 4px solid; border-image: linear-gradient(to right, #fbfcb9be, #ffcdf3aa, #65d3ffaa); border-image-slice: 1;">
                                 <div class="card-body">
 									<div class="row no-gutters align-items-center">
-									<div class="text-m font-weight-bold text-uppercase mb-1" style="color: #FA0B0B;">
+									<div class="text-m font-weight-bold text-uppercase mb-1" style="color: #C9B1DB;">
                                                 Node Wallets</div>
                                                 </div>
                                     <div class="row no-gutters align-items-center" th:each="wallet : ${nodeInfoVO.lotusWalletVO}">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #FA0B0B;">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #C9B1DB;">
                                                 Name</div>
                                             <div class="h5 mb-0 font-weight-bold text-white"><p th:text="${wallet.name}"></p></div>
                                           </div>
                                            <div class="col mr-4">  
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #FA0B0B;">
+                                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #C9B1DB;">
                                                 Fil</div>
                                             <div class="h5 mb-0 font-weight-bold text-white"><p th:text="${wallet.fil}"></p></div>
                                         </div>                  
