@@ -79,6 +79,13 @@ public class NanoDCController {
         mav.setViewName("views/upsController");
         return mav;
     }
+	@GetMapping(value={"/monitor_storageInfo"})
+    public ModelAndView storageInfo(HttpServletRequest request) throws IOException {
+    	//f01227505 //f01695888
+		ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/storageInfo");
+        return mav;
+    }
 	@GetMapping(value={"/404"})
     public ModelAndView page404(HttpServletRequest request) throws IOException {
     	//f01227505 //f01695888
