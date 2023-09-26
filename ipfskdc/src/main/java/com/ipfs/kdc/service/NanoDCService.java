@@ -457,9 +457,15 @@ public class NanoDCService {
     }
     //"http://58.121.116.101:9101/metrics"
     public void scheduledUpdateNodeInfo(String sourceLink, Date info_date) throws IOException {
+    	
     	 List<String> prometeusData = getPrometheusData(sourceLink);
          NodeInfoVO nodeInfoVO = processPrometheusData(prometeusData);
          nodeInfoVO.setInfo_date(info_date);
+         
+         NodeInfoVO latestInfo = nanoDCMapper.selectLatestNodeInfo(nodeInfoVO);
+         if(!latestInfo.getInfo_date().before(info_date)) {
+        	 return;
+         }
          nanoDCMapper.insertNewNodeInfo(nodeInfoVO);
          List<LotusWalletVO> lotusWalletVOList = nodeInfoVO.getLotusWalletVO();
          
@@ -474,6 +480,11 @@ public class NanoDCService {
    	hardWareInfoVO.setInfo_date(info_date);
    	hardWareInfoVO.setMiner_id(miner_id);
    	hardWareInfoVO.setSource_link(sourceLink);
+   	
+   	HardWareInfoVO latestInfo = nanoDCMapper.selectLatestHardWareInfo(hardWareInfoVO);
+    if(!latestInfo.getInfo_date().before(info_date)) {
+   	 return;
+    }
    	nanoDCMapper.insertNewHardWareInfo(hardWareInfoVO);
    	
    }

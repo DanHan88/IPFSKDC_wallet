@@ -21,4 +21,5 @@ public interface NanoDCMapper {
 	public NodeInfoVO selectLatestNodeInfo(NodeInfoVO nodeInfoVO);
 	public HardWareInfoVO selectLatestHardWareInfo(HardWareInfoVO nodeInfoVO);
 	public List<LotusWalletVO> selectLotusWalletVO(NodeInfoVO nodeInfoVO);
+	public boolean checkOverLap(NodeInfoVO nodeInfoVO);
 }
