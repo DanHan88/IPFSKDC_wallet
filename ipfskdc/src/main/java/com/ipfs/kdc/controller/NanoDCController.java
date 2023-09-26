@@ -38,12 +38,12 @@ public class NanoDCController {
         return mav;
     }
 	@GetMapping(value={"/monitor_hardwareInfo"})
-    public ModelAndView hardwareInfo(HttpServletRequest request,@RequestParam("minerId") String minerId) throws IOException {
+    public ModelAndView hardwareInfo(HttpServletRequest request,@RequestParam("minerId") String minerId, @RequestParam("source_link") String source_link) throws IOException {
     	//f01227505 //f01695888
         ModelAndView mav = new ModelAndView();
         HardWareInfoVO hardWareInfoVO = new HardWareInfoVO();
-        hardWareInfoVO.setMiner_id(minerId);
-        hardWareInfoVO.setSource_link("http://121.178.82.230:9100/metrics");
+        hardWareInfoVO.setMiner_id(minerId); //"http://121.178.82.230:9100/metrics"
+        hardWareInfoVO.setSource_link("http://"+source_link);
         hardWareInfoVO = nanoDCMapper.selectLatestHardWareInfo(hardWareInfoVO);
         mav.addObject("hardWareInfoVO", hardWareInfoVO);
         mav.setViewName("views/hardWareInfo");
