@@ -31,7 +31,7 @@
   --warning: #f6c23e;
   --danger: #e74a3b;
   --light: #f8f9fc;
-  --dark: #000080;
+  --dark: #5a5c69;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -1744,7 +1744,7 @@ pre code {
 
 .table-dark {
   color: #fff;
-  background-color: navy;
+  background-color: #5a5c69;
 }
 
 .table-dark th,
@@ -2616,8 +2616,8 @@ fieldset:disabled a.btn {
 
 .btn-dark {
   color: #fff;
-  background-color: navy;
-  border-color: navy;
+  background-color: #5a5c69;
+  border-color: #5a5c69;
 }
 
 .btn-dark:hover {
@@ -4984,7 +4984,7 @@ a.badge-light:focus, a.badge-light.focus {
 
 .badge-dark {
   color: #fff;
-  background-color: navy;
+  background-color: #5a5c69;
 }
 
 a.badge-dark:hover, a.badge-dark:focus {
@@ -6481,7 +6481,7 @@ button.bg-light:focus {
 }
 
 .bg-dark {
-  background-color: navy !important;
+  background-color: #5a5c69 !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus,
@@ -9797,7 +9797,7 @@ a:focus {
 }
 
 #wrapper #content-wrapper {
-  background-color: white;
+  background-color: #f8f9fc;
   width: 100%;
   overflow-x: hidden;
 }
@@ -9825,7 +9825,7 @@ a:focus {
   height: 2.75rem;
   text-align: center;
   color: #fff;
-  background: white;
+  background: rgba(90, 92, 105, 0.5);
   line-height: 46px;
 }
 
@@ -9936,14 +9936,14 @@ a:focus {
 }
 
 .bg-gradient-light {
-  background-color: white;
+  background-color: #f8f9fc;
   background-image: linear-gradient(180deg, #f8f9fc 10%, #c2cbe5 100%);
   background-size: cover;
 }
 
 .bg-gradient-dark {
-  background-color: navy;
-  background-image: linear-gradient(180deg, #navy 10%, #373840 100%);
+  background-color: #5a5c69;
+  background-image: linear-gradient(180deg, #5a5c69 10%, #373840 100%);
   background-size: cover;
 }
 
@@ -9976,7 +9976,7 @@ a:focus {
 }
 
 .bg-gray-800 {
-  background-color: navy !important;
+  background-color: #5a5c69 !important;
 }
 
 .bg-gray-900 {
