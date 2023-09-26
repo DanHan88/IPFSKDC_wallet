@@ -40,6 +40,12 @@ public class NanoDCBatch {
         String miner_id = "f01695888";
         nanoDCService.scheduledUpdateNodeInfo("http://121.178.82.230:9101/metrics",info_date);
 		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.230:9100/metrics",info_date,miner_id);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.231:9100/metrics",info_date,miner_id);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.232:9100/metrics",info_date,miner_id);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.236:9100/metrics",info_date,miner_id);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.237:9100/metrics",info_date,miner_id);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.248:9100/metrics",info_date,miner_id);
+		nanoDCService.scheduledUpdateHardWareInfo("http://121.178.82.249:9100/metrics",info_date,miner_id);
 		System.out.println("스케줄러 성공! 로컬에서 뜨면 안되요. 스케줄러 로컬테스트 환경에서는 꺼주세요");
     }
 }

@@ -142,7 +142,7 @@ public class NanoDCService {
     	}
     	
     	double cpuBusy = totalCPUUsage/totalCPUCapacity*100;
-    	double ramUsed = (memoryFree)/memoryTotal*100;
+    	double ramUsed = (memoryTotal-memoryFree)/memoryTotal*100;
     	double swapUsed = (totalSwapMemory- totalswapFreeByte)/totalSwapMemory*100;
     	double rootFsUsed = (fileSystemTotal-fileSystemAvailable)*100/fileSystemTotal;
     	HardWareInfoVO hardWareInfoVO = new HardWareInfoVO();
