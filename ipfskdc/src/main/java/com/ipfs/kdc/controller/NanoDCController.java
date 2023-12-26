@@ -95,9 +95,14 @@ public class NanoDCController {
     }
 	@GetMapping(value={"/monitor_homepage"})
     public ModelAndView hompage(HttpServletRequest request) throws IOException {
-    	//f01227505
         ModelAndView mav = new ModelAndView();
         mav.setViewName("views/homepage");
+        return mav;
+    }
+	@GetMapping(value={"/nanodc_map"})
+    public ModelAndView nanoDCMAP(HttpServletRequest request) throws IOException {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("views/nanodcmap");
         return mav;
     }
 }

@@ -482,7 +482,7 @@ public class NanoDCService {
    	hardWareInfoVO.setSource_link(sourceLink);
    	
    	HardWareInfoVO latestInfo = nanoDCMapper.selectLatestHardWareInfo(hardWareInfoVO);
-    if(!latestInfo.getInfo_date().before(info_date)) {
+    if(latestInfo!=null&&!latestInfo.getInfo_date().before(info_date)) {
    	 return;
     }
    	nanoDCMapper.insertNewHardWareInfo(hardWareInfoVO);
